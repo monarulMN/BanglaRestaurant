@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Ingredient>
+
+@{
+    ViewBag.Title = " List of Restaurant Ingredients";
+}
+<div class="row">
+    <div class="col-md-6">
+        <h1>Ingredients</h1>
+    </div>
+    <div class="col-md-6">
+        <a asp-action="Create" class="text-decoration-none">Create New Ingredient</a>
+    </div>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(Ingredient i in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => i.Name)
+                </td>
+                <td></td>
+                <td>
+                    <a asp-action="Details" class=" btn btn-outline-info text-decoration-none" asp-route-id="@i.IngredientId">Details</a>
+                    <a asp-action="Edit" class="btn btn-outline-primary text-decoration-none" asp-route-id="@i.IngredientId">Edit</a>
+                    <a asp-action="Delete" class="btn btn-outline-danger text-decoration-none" asp-route-id="@i.IngredientId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

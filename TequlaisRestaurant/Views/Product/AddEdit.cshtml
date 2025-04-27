@@ -1,0 +1,69 @@
+﻿@model Product
+@{
+    ViewBag.Title = $"{ViewBag.Operation} Menu Item";
+}
+
+<h1>@ViewBag.Operation Menu Item</h1>
+
+<form asp-action="AddEdit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="ProductId" />
+    <div class="for-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" name="Name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="for-group">
+        <label asp-for="Description"></label>
+        <input asp-for="Description" class="form-control" name="Description" />
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <div class="for-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" name="Price" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+    <div class="for-group">
+        <label asp-for="Stock">Quality In Stock</label>
+        <input asp-for="Stock" class="form-control" name="Stock" />
+        <span asp-validation-for="Stock" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="imageUpload">Upload Image </label>
+        <input type="file" class="form-control" id="imageUpload" name="ImageFile" asp-for="ImageFile" />
+    </div>
+    <div class="row">
+        <div class="col">
+            @if (ViewBag.Category != null)
+            {
+                foreach (Category category in ViewBag.Category)
+                {
+                    bool isChecked = (Model.CategoryId == category.CategoryId ? true : false);
+                   <div class="form-check">
+                       <input type="radio" class="form-check-input" asp-for="CategoryId" id="cat_@category.CategoryId"
+                       name="CategoryId" value="@category.CategoryId" checked="@isChecked" />
+                       <label class="form-check-label" for="cat_@category.CategoryId">@category.Name</label>
+                   </div>
+                }
+            }
+        </div>
+        <div class="col">
+            @if (ViewBag.Ingredients != null)
+            {
+                foreach (Ingredient ingredient in ViewBag.Ingredients)
+                {
+                    bool isChecked = Model.ProductIngredients != null && Model.ProductIngredients.Any(i => i.IngredientId == ingredient.IngredientId);
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="@ingredient.IngredientId" name="IngredientId"  value="@ingredient.IngredientId"
+                        checked="@isChecked "/>
+                        <label class="form-check-label" for="@ingredient.IngredientId">@ingredient.Name</label>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="mt-2 p-0">
+        <button type="submit" class="btn btn-primary" >Save</button>
+        <a asp-action="Index" asp-asp-controller="Product" class="btn btn-outline-info text-decoration-none">Cancel</a>
+    </div>
+
+</form>
