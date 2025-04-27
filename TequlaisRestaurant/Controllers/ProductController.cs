@@ -39,8 +39,7 @@ namespace TequlaisRestaurant.Controllers
             {
                 Product product = await products.GetByIdAsync(id, new QueryOptions<Product>
                 {
-                    Includes = "ProductIngredients.Ingredient, Category",
-                    Where = p => p.ProductId == id
+                    Includes = "ProductIngredients.Ingredient, Category"
                 });
                 ViewBag.Operation = "Edit";
                 return View(product);
@@ -77,11 +76,23 @@ namespace TequlaisRestaurant.Controllers
                 }
                 else
                 {
-                    ////ViewBag.Ingredients = await ingredients.GetAllAsync();
-                    //ViewBag.Category = await categories.GetAllAsync();
+                    var existingProduct = await products.GetByIdAsync(product.ProductId, new QueryOptions<Product>
+                        { Includes = "ProductIngredients" });
+                    if(existingProduct == null)
+                    {
+                        ModelState.AddModelError("", "Product not found");
+                        ViewBag.Ingredents = await ingredients.GetAllAsync();
+                        ViewBag.Category = await categories.GetAllAsync();
+                        return View(product);
+                    }
 
-                    return View(product ?? new Product());
-                    //return RedirectToAction("Index", "Product");  
+                    existingProduct.Name = product.Name;
+                    existingProduct.Description = product.Description;
+                    existingProduct.Price = product.Price;
+                    existingProduct.Stock = product.Stock;
+
+
+                    return RedirectToAction("Index", "Product");
                 }
             }
             else
