@@ -47,9 +47,12 @@ namespace TequlaisRestaurant.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddEdit(Product product, int[] ingredientIds)
+        public async Task<IActionResult> AddEdit(Product product, int[] ingredientIds, int CategoryId)
         {
-            if(ModelState.IsValid)
+            ViewBag.Ingredients = await ingredients.GetAllAsync();
+            ViewBag.Category = await categories.GetAllAsync();
+
+            if (ModelState.IsValid)
             {
                 if(product.ImageFile != null)
                 {
@@ -64,8 +67,7 @@ namespace TequlaisRestaurant.Controllers
                 }
                 if(product.ProductId == 0)
                 {
-                    ViewBag.Ingredients = await ingredients.GetAllAsync();
-                    ViewBag.Category = await categories.GetAllAsync();
+                    product.CategoryId = CategoryId;
                     foreach (int id in ingredientIds)
                     {
                         product.ProductIngredients?.Add(new ProductIngredient 
@@ -90,16 +92,48 @@ namespace TequlaisRestaurant.Controllers
                     existingProduct.Description = product.Description;
                     existingProduct.Price = product.Price;
                     existingProduct.Stock = product.Stock;
+                    existingProduct.CategoryId = CategoryId;
 
+                    //Update Product Ingredients
+                    existingProduct.ProductIngredients?.Clear();
+                    foreach(int id in ingredientIds)
+                    {
+                        existingProduct.ProductIngredients?.Add(new ProductIngredient 
+                            { IngredientId = id, ProductId = product.ProductId });
+                    }
 
-                    return RedirectToAction("Index", "Product");
+                    try
+                    {
+                        await products.UpdateAsync(existingProduct);
+                    }
+                    catch(Exception ex)
+                    {
+                        ModelState.AddModelError("", $"Error: {ex.GetBaseException().Message}");
+                        ViewBag.Ingredients = await ingredients.GetAllAsync();
+                        ViewBag.Category = await categories.GetAllAsync();
+                        return View(product);
+                    }
                 }
             }
-            else
-            {
-                return View(product);
-            }
+            
+            return RedirectToAction("Index", "Product");
 
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await products.DeleteAsync(id);
+                return RedirectToAction("Index");
+
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Product not found!");
+                return RedirectToAction("Index");
+            }
         }
 
     }
