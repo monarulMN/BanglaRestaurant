@@ -119,7 +119,11 @@ namespace TequlaisRestaurant.Controllers
             return RedirectToAction("Index", "Product");
 
         }
-
+        [HttpGet]
+        public async Task<IActionResult> Delete()
+        {
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {

@@ -58,7 +58,7 @@ namespace TequlaisRestaurant.Controllers
             var existingItem = model.OrderItems.FirstOrDefault(oi => oi.ProductId == productId);
 
             //If the product is already in the Order, Update the Quantity
-            if(existingItem == null)
+            if(existingItem != null)
             {
                 existingItem.Quantity += productQuantity;
             }
@@ -84,7 +84,7 @@ namespace TequlaisRestaurant.Controllers
         }
 
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
         public async Task<IActionResult> Cart()
         {

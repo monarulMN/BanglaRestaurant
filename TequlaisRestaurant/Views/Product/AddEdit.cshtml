@@ -51,11 +51,11 @@
             {
                 foreach (Ingredient ingredient in ViewBag.Ingredients)
                 {
-                    bool isChecked = Model.ProductIngredients != null && Model.ProductIngredients.Any(i => i.IngredientId == ingredient.IngredientId);
+                    bool isChecked = Model.ProductIngredients != null && Model.ProductIngredients.Any(i => i.IngredientId == ingredient.IngredientId ? true: false);
                     <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="@ingredient.IngredientId" name="IngredientId"  value="@ingredient.IngredientId"
+                        <input type="checkbox" class="form-check-input" id="in_@ingredient.IngredientId" name="IngredientId"  value="@ingredient.IngredientId"
                         checked="@isChecked "/>
-                        <label class="form-check-label" for="@ingredient.IngredientId">@ingredient.Name</label>
+                        <label class="form-check-label" for="in_@ingredient.IngredientId">@ingredient.Name</label>
                     </div>
                 }
             }

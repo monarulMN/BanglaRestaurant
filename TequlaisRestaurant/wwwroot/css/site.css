@@ -26,3 +26,9 @@ body {
     object-fit: cover;
     width: 100%;
 }
+
+.card-hover:hover {
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.3);
+    transform: translateY(-5px);
+    transition: all 0.3s ease;
+}
